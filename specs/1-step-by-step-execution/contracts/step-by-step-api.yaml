@@ -1,0 +1,411 @@
+# OpenAPI Specification: Step-by-Step Execution Feature
+
+openapi: 3.0.0
+info:
+  title: Step-by-Step Execution API
+  version: 1.0.0
+  description: API for managing step-by-step learning execution in the AI-Native Textbook
+
+servers:
+  - url: https://api.yourdomain.com/v1
+    description: Production server
+
+paths:
+  /chapters:
+    get:
+      summary: Get all chapters
+      description: Retrieve a list of all available chapters in the textbook
+      responses:
+        '200':
+          description: List of chapters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chapter'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /chapters/{chapterId}:
+    get:
+      summary: Get chapter by ID
+      description: Retrieve details of a specific chapter including its steps
+      parameters:
+        - name: chapterId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID of the chapter to retrieve
+      responses:
+        '200':
+          description: Chapter details with steps
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChapterWithSteps'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /steps/{stepId}:
+    get:
+      summary: Get step by ID
+      description: Retrieve details of a specific learning step
+      parameters:
+        - name: stepId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID of the step to retrieve
+      responses:
+        '200':
+          description: Step details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningStep'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /progress:
+    get:
+      summary: Get user's overall progress
+      description: Retrieve the user's progress across all chapters and steps
+      responses:
+        '200':
+          description: User's progress summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProgress'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /progress/steps/{stepId}:
+    get:
+      summary: Get progress for specific step
+      description: Retrieve the user's progress for a specific step
+      parameters:
+        - name: stepId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID of the step to check progress for
+      responses:
+        '200':
+          description: Step progress details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningProgress'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /progress/steps/{stepId}/complete:
+    post:
+      summary: Mark step as completed
+      description: Mark a step as completed after validation
+      parameters:
+        - name: stepId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID of the step to mark as completed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                validation_data:
+                  type: object
+                  description: Data required for step completion validation
+      responses:
+        '200':
+          description: Step marked as completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningProgress'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '##components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /progress/steps/{stepId}/reset:
+    put:
+      summary: Reset step progress
+      description: Reset the progress for a specific step
+      parameters:
+        - name: stepId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID of the step to reset
+      responses:
+        '200':
+          description: Step progress reset
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningProgress'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /profiles/me:
+    get:
+      summary: Get user profile
+      description: Retrieve the authenticated user's profile information
+      responses:
+        '200':
+          description: User profile information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    put:
+      summary: Update user profile
+      description: Update the authenticated user's profile information
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileUpdate'
+      responses:
+        '200':
+          description: User profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  schemas:
+    Chapter:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        order_index:
+          type: integer
+        prerequisite_chapter_id:
+          type: string
+          format: uuid
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    
+    LearningStep:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        chapter_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        step_type:
+          type: string
+          enum: [reading, quiz, exercise, video, interactive]
+        order_index:
+          type: integer
+        prerequisite_step_id:
+          type: string
+          format: uuid
+        required_completion_criteria:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    
+    ChapterWithSteps:
+      allOf:
+        - $ref: '#/components/schemas/Chapter'
+        - type: object
+          properties:
+            steps:
+              type: array
+              items:
+                $ref: '#/components/schemas/LearningStep'
+    
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        auth_id:
+          type: string
+        background_level:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        preferred_language:
+          type: string
+        learning_preferences:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    
+    UserProfileUpdate:
+      type: object
+      properties:
+        background_level:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        preferred_language:
+          type: string
+        learning_preferences:
+          type: object
+    
+    LearningProgress:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        step_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [not_started, in_progress, completed, skipped]
+        completion_percentage:
+          type: integer
+          minimum: 0
+          maximum: 100
+        started_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+        progress_data:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    
+    UserProgress:
+      type: object
+      properties:
+        overall_completion:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        chapters:
+          type: array
+          items:
+            type: object
+            properties:
+              chapter:
+                $ref: '#/components/schemas/Chapter'
+              completion_percentage:
+                type: number
+                format: float
+                minimum: 0
+                maximum: 1
+              steps_completed:
+                type: integer
+              total_steps:
+                type: integer
+
+  responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Authentication required"
+    
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Resource not found"
+    
+    BadRequest:
+      description: Invalid request data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Invalid request data"
+    
+    Forbidden:
+      description: Operation not allowed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Operation not allowed"

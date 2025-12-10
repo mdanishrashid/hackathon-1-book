@@ -1,0 +1,83 @@
+.learning-path-selector {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.learning-path-selector h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1.25rem;
+}
+
+.path-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.path-option {
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.path-option:hover {
+  border-color: #4CAF50;
+  background-color: #f0f7ff;
+}
+
+.path-option.selected {
+  border-color: #4CAF50;
+  background-color: #e8f5e9;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+}
+
+.path-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.path-header h4 {
+  margin: 0;
+  color: #333;
+}
+
+.path-type {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.path-type.default {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.path-type.personalized {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.path-description {
+  margin: 0.5rem 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.path-stats {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 0.75rem;
+}

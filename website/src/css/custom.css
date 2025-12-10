@@ -1,0 +1,189 @@
+/* Custom CSS for AI-Native Textbook */
+/* You can add custom styles here */
+
+:root {
+  --ifm-color-primary: #25c2a0;
+  --ifm-color-primary-dark: #21af90;
+  --ifm-color-primary-darker: #1fa588;
+  --ifm-color-primary-darkest: #1a8870;
+  --ifm-color-primary-light: #29d5b0;
+  --ifm-color-primary-lighter: #32d8b4;
+  --ifm-color-primary-lightest: #4fddbf;
+}
+
+/* Custom styles for learning components */
+.step-progress-container {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.step-navigation {
+  margin-bottom: 1.5rem;
+}
+
+.chapter-progress {
+  margin-bottom: 1rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--ifm-color-primary);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.step-list {
+  margin-top: 1rem;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  margin: 0.25rem 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  flex-wrap: wrap; /* Allow items to wrap on small screens */
+}
+
+.step-item:hover {
+  background-color: #e9ecef;
+}
+
+.step-item.current {
+  background-color: #e7f4ff;
+  border-color: var(--ifm-color-primary);
+}
+
+.step-item.completed {
+  background-color: #e8f5e9;
+}
+
+.step-item.in_progress {
+  background-color: #fff8e1;
+}
+
+.step-number {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 50%;
+  background-color: #6c757d;
+  color: white;
+  font-size: 0.9rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0; /* Prevent number from shrinking */
+}
+
+.step-title {
+  flex-grow: 1;
+  margin-right: 0.75rem;
+  font-size: 0.95rem;
+  word-break: break-word; /* Break long words on small screens */
+}
+
+.step-status {
+  font-weight: bold;
+  flex-shrink: 0; /* Prevent status from shrinking */
+}
+
+.step-status[data-status="completed"] {
+  color: #28a745;
+}
+
+.step-status[data-status="in_progress"] {
+  color: #ffc107;
+}
+
+.step-status[data-status="not_started"] {
+  color: #6c757d;
+}
+
+.current-step-info {
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+
+/* Mobile-friendly styles */
+@media (max-width: 768px) {
+  .step-progress-container {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .step-item {
+    padding: 0.75rem 0.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .step-number {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .step-title {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+
+  .step-status {
+    align-self: flex-end;
+  }
+
+  /* Adjust other elements for mobile */
+  .step-title {
+    font-size: 1rem;
+  }
+
+  .progress-bar {
+    height: 10px;
+  }
+
+  .current-step-info {
+    padding: 0.75rem;
+  }
+
+  /* Make text more readable on small screens */
+  body {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .step-number {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 0.8rem;
+  }
+
+  .step-title {
+    font-size: 0.9rem;
+  }
+
+  .step-progress-container {
+    padding: 0.75rem;
+  }
+
+  .current-step-info {
+    padding: 0.5rem;
+  }
+}
